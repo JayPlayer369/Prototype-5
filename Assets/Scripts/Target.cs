@@ -9,9 +9,8 @@ public class Target : MonoBehaviour
     private float maxTorque = 10;
     private float xRange = 4;
     private float ySpawnPos = -6;
-
     private Rigidbody targetRb;
-    private GameManager gameManager;
+    public GameManager gameManager;
     public int pointValue;
     public ParticleSystem explosionParticle;
 
@@ -35,16 +34,34 @@ public class Target : MonoBehaviour
 
     public void OnMouseDown()
     {
+       if(gameManager.isGameActive);
+        {
         Destroy(gameObject);
-    
         gameManager.UpdateScore(pointValue);
         Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+        }
     }
 
     public void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
+
+         if (!gameObject.CompareTag("Bad") && gameManager.isGameActive)
+        {
+            gameManager.UpdateLives(-1);
+        }
     }
+
+    public void DestroyTarget()
+    {
+        if (gameManager.isGameActive)
+    {
+        Destroy(gameObject);
+        Instantiate(explosionParticle, transform.position,
+        explosionParticle.transform.rotation);
+        gameManager.UpdateScore(pointValue);
+    }
+}
     Vector3 RandomForce()
     {
         return Vector3.up * Random.Range(minSpeed, maxSpeed);
@@ -59,4 +76,6 @@ public class Target : MonoBehaviour
     {
         return new Vector3(Random.Range(-xRange, xRange), ySpawnPos);
     }
+
+    
 }
